@@ -18,8 +18,6 @@ public class RobotDodge
 		_GameWindow = gameWindow;
 		_Player = new Player("player", "Player.png", gameWindow);
 		_Robots = new List<Robot>();
-		// _TestRobot = RandomRobot();
-
 	}
 
 	public void HandleInput()
@@ -62,7 +60,8 @@ public class RobotDodge
 	
 	private void UpdateRobots()
 	{
-		
+		// not sure why this was included in UML diagram
+		// assume this will be used in next task - leaving in
 	}
 
 	public void Draw()
@@ -77,7 +76,6 @@ public class RobotDodge
 		}
 
 		_GameWindow.Refresh(60);
-
 	}
 
 	public Robot RandomRobot()
