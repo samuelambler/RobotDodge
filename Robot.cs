@@ -1,9 +1,11 @@
+using System.Numerics;
 using SplashKitSDK;
 
 public class Robot
 {
 	public double X { get; set; }
 	public double Y { get; set; }
+	private Vector2D Velocity { get; set; }
 	public Color MainColor { get; set; }
 	private int Width
 	{
@@ -18,12 +20,52 @@ public class Robot
 		get { return SplashKit.CircleAt(X + (Width / 2), Y + (Height / 2), 20); }
 	}
 
-	public Robot(Window gameWindow)
+	public Robot(Window gameWindow, Player player)
 	{
-		const int GAP = 10;
+		const int SPEED = 4;
 
-		X = SplashKit.Rnd(gameWindow.Width - Width - GAP);
-		Y = SplashKit.Rnd(gameWindow.Height - Height - GAP);
+		if (SplashKit.Rnd() < 0.5)
+		{
+			X = SplashKit.Rnd(gameWindow.Width);
+
+			if (SplashKit.Rnd() < 0.5)
+			{
+				Y = -Height;
+			}
+			else
+			{
+				Y = gameWindow.Height;
+			}
+		}
+		else
+		{
+			Y = SplashKit.Rnd(gameWindow.Height);
+
+			if (SplashKit.Rnd() < 0.5)
+			{
+				X = -Width;
+			}
+			else
+			{
+				X = gameWindow.Width;
+			}
+		}
+
+		Point2D fromPt = new Point2D()
+		{
+			X = X,
+			Y = Y
+		};
+
+		Point2D toPt = new Point2D()
+		{
+			X = player.X,
+			Y = player.Y
+		};
+
+		Vector2D dir = SplashKit.UnitVector(SplashKit.VectorPointToPoint(fromPt, toPt));
+
+		Velocity = SplashKit.VectorMultiply(dir, SPEED);
 
 		MainColor = Color.RandomRGB(200);
 	}
@@ -43,5 +85,16 @@ public class Robot
 		SplashKit.FillRectangle(MainColor, rightX, eyeY, 10, 10);
 		SplashKit.FillRectangle(MainColor, leftX, mouthY, 25, 10);
 		SplashKit.FillRectangle(MainColor, leftX + 2, mouthY + 2, 21, 6);
+	}
+
+	public void Update()
+	{
+		X += Velocity.X;
+		Y += Velocity.Y;
+	}
+
+	public bool isOffscreen(Window screen)
+	{
+		return X < -Width || X > screen.Width || Y < -Height || Y > screen.Height;
 	}
 }

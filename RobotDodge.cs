@@ -4,7 +4,7 @@ public class RobotDodge
 {
 	private Player _Player;
 	private Window _GameWindow;
-	private Robot _TestRobot;
+	private  List<Robot> _Robots;
 	public bool Quit
 	{
 		get
@@ -17,7 +17,8 @@ public class RobotDodge
 	{
 		_GameWindow = gameWindow;
 		_Player = new Player("player", "Player.png", gameWindow);
-		_TestRobot = RandomRobot();
+		_Robots = new List<Robot>();
+		// _TestRobot = RandomRobot();
 
 	}
 
@@ -29,10 +30,39 @@ public class RobotDodge
 
 	public void Update()
 	{
-		if (_Player.CollidedWidth(_TestRobot))
+		this.CheckCollisions();
+
+		foreach (Robot i in _Robots)
 		{
-			_TestRobot = RandomRobot();
+			i.Update();
 		}
+
+		if (SplashKit.Rnd() < 0.1)
+		{
+			_Robots.Add(RandomRobot());
+		}
+	}
+
+	private void CheckCollisions()
+	{
+		List<Robot> _removeRobots = new List<Robot>();
+
+		foreach (Robot i in _Robots)
+		{
+			if (_Player.CollidedWidth(i) || i.isOffscreen(_GameWindow))
+			{
+				_removeRobots.Add(i);
+			}
+		}
+		foreach (Robot j in _removeRobots)
+		{
+			_Robots.Remove(j);
+		}
+	}
+	
+	private void UpdateRobots()
+	{
+		
 	}
 
 	public void Draw()
@@ -40,7 +70,11 @@ public class RobotDodge
 		_GameWindow.Clear(Color.White);
 
 		_Player.Draw();
-		_TestRobot.Draw();
+
+		foreach (Robot i in _Robots)
+		{
+			i.Draw();
+		}
 
 		_GameWindow.Refresh(60);
 
@@ -48,7 +82,7 @@ public class RobotDodge
 
 	public Robot RandomRobot()
 	{
-		Robot _Robot = new Robot(_GameWindow);
+		Robot _Robot = new Robot(_GameWindow, _Player);
 		return _Robot;
 	}
 }
