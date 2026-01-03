@@ -4,7 +4,8 @@ public class RobotDodge
 {
 	private Player _Player;
 	private Window _GameWindow;
-	private  List<Robot> _Robots;
+	private List<Robot> _Robots;
+	private List<Bullet> _Bullets;
 	public bool Quit
 	{
 		get
@@ -18,12 +19,18 @@ public class RobotDodge
 		_GameWindow = gameWindow;
 		_Player = new Player("player", "Player.png", gameWindow);
 		_Robots = new List<Robot>();
+		_Bullets = new List<Bullet>();
 	}
 
 	public void HandleInput()
 	{
 		_Player.HandleInput();
 		_Player.StayOnWindow(_GameWindow);
+
+		if (SplashKit.MouseClicked(MouseButton.LeftButton))
+		{
+			_Bullets.Add(new Bullet(_Player.X + _Player.Width / 2, _Player.Y + _Player.Height / 2, SplashKit.MousePosition()));
+		}
 	}
 
 	public void Update()
@@ -35,7 +42,12 @@ public class RobotDodge
 			i.Update();
 		}
 
-		if (SplashKit.Rnd() < 0.1)
+		foreach (Bullet b in _Bullets)
+		{
+			b.Update();
+		}
+
+		if (SplashKit.Rnd() < 0.01)
 		{
 			_Robots.Add(RandomRobot());
 		}
@@ -44,20 +56,46 @@ public class RobotDodge
 	private void CheckCollisions()
 	{
 		List<Robot> _removeRobots = new List<Robot>();
+		List<Bullet> _removeBullets = new List<Bullet>();
 
 		foreach (Robot i in _Robots)
 		{
-			if (_Player.CollidedWidth(i) || i.isOffscreen(_GameWindow))
+			if (_Player.CollidedWidth(i) || i.IsOffScreen(_GameWindow))
 			{
 				_removeRobots.Add(i);
 			}
 		}
+
+		foreach (Bullet b in _Bullets)
+		{
+			if (b.IsOffScreen(_GameWindow))
+			{
+				_removeBullets.Add(b);
+			}
+			else
+			{
+				foreach (Robot r in _Robots)
+				{
+					if (!_removeRobots.Contains(r) && SplashKit.CirclesIntersect(b.CollisionCircle, r.CollisionCircle))
+					{
+						_removeRobots.Add(r);
+						_removeBullets.Add(b);
+						break;
+					}
+				}
+			}
+		}
+
 		foreach (Robot j in _removeRobots)
 		{
 			_Robots.Remove(j);
 		}
+		foreach (Bullet k in _removeBullets)
+		{
+			_Bullets.Remove(k);
+		}
 	}
-	
+
 	private void UpdateRobots()
 	{
 		// not sure why this was included in UML diagram
@@ -73,6 +111,11 @@ public class RobotDodge
 		foreach (Robot i in _Robots)
 		{
 			i.Draw();
+		}
+
+		foreach (Bullet b in _Bullets)
+		{
+			b.Draw();
 		}
 
 		_GameWindow.Refresh(60);

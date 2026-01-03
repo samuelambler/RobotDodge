@@ -1,4 +1,4 @@
-using System.Numerics;
+	using System.Numerics;
 using SplashKitSDK;
 
 public class Robot
@@ -93,7 +93,7 @@ public class Robot
 		Y += Velocity.Y;
 	}
 
-	public bool isOffscreen(Window screen)
+	public bool IsOffScreen(Window screen)
 	{
 		return X < -Width || X > screen.Width || Y < -Height || Y > screen.Height;
 	}

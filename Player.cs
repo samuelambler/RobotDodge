@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using SplashKitSDK;
 
 public class Player
@@ -5,7 +6,16 @@ public class Player
 	private Bitmap _PlayerBitmap;
 	public double X { get; set; }
 	public double Y { get; set; }
+	public Lives _Lives;
 	public bool Quit { get; private set; }
+	public SplashKitSDK.Timer myTimer;
+	public string Score
+	{
+		get
+		{
+			return Convert.ToString(Math.Round(Convert.ToDecimal(myTimer.Ticks) / 1000, 0));
+		}
+	}
 	public int Width
 	{
 		get
@@ -13,7 +23,6 @@ public class Player
 			return _PlayerBitmap.Width;
 		}
 	}
-
 	public int Height
 	{
 		get
@@ -27,12 +36,19 @@ public class Player
 		_PlayerBitmap = SplashKit.LoadBitmap(name, fileLocation);
 		X = (gameWindow.Width - Width) / 2;
 		Y = (gameWindow.Height - Height) / 2;
+
+		_Lives = new Lives(5);
 		Quit = false;
+
+		myTimer = new SplashKitSDK.Timer("My Timer");
+		myTimer.Start();
 	}
 
 	public void Draw()
 	{
 		SplashKit.DrawBitmap(_PlayerBitmap, X, Y);
+		_Lives.Draw();
+		SplashKit.DrawText(this.Score, Color.Black, SplashKit.LoadFont("impact", "ARLRDBD.TTF"), 20, 750, 20);
 	}
 
 	public void HandleInput()
@@ -97,6 +113,15 @@ public class Player
 
 	public bool CollidedWidth(Robot other)
 	{
-		return _PlayerBitmap.CircleCollision(X, Y, other.CollisionCircle);
+		if (_PlayerBitmap.CircleCollision(X, Y, other.CollisionCircle))
+		{
+			_Lives.numLives--;
+			if (_Lives.numLives == 0)
+			{
+				Quit = true;
+			}
+			return true;
+		}
+		return false;
 	}
 }
