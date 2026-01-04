@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using SplashKitSDK;
 
 public class RobotDodge
@@ -47,7 +48,7 @@ public class RobotDodge
 			b.Update();
 		}
 
-		if (SplashKit.Rnd() < 0.01)
+		if (SplashKit.Rnd() < 0.03)
 		{
 			_Robots.Add(RandomRobot());
 		}
@@ -123,7 +124,22 @@ public class RobotDodge
 
 	public Robot RandomRobot()
 	{
-		Robot _Robot = new Robot(_GameWindow, _Player);
-		return _Robot;
+		float rand = SplashKit.Rnd();
+
+		if (rand < 0.33)
+		{
+			Robot _Robot = new Boxy(_GameWindow, _Player);
+			return _Robot;
+		}
+		else if (rand > 0.66)
+		{
+			Robot _Robot = new Roundy(_GameWindow, _Player);
+			return _Robot;
+		}
+		else
+		{
+			Robot _Robot = new Spiky(_GameWindow, _Player);
+			return _Robot;
+		}
 	}
 }
