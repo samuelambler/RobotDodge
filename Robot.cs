@@ -83,3 +83,86 @@ public abstract class Robot
 		return X < -Width || X > screen.Width || Y < -Height || Y > screen.Height;
 	}
 }
+
+public class Spiky : Robot
+{
+
+	public Spiky(Window gameWindow, Player player) : base(gameWindow, player)
+	{
+
+	}
+
+	public override void Draw()
+	{
+		double leftX, midX, rightX;
+		double eyeY, mouthY;
+
+		leftX = X + 24;
+		midX = X + 30;
+		rightX = X + 36;
+
+		eyeY = Y + 30;
+		mouthY = Y + 42;
+
+		SplashKit.FillTriangle(Color.Gray, X, Y + 60, X + 60, Y + 60, midX, Y);
+		SplashKit.FillCircle(MainColor, leftX, eyeY, 5);
+		SplashKit.FillCircle(MainColor, rightX, eyeY, 5);
+		SplashKit.FillRectangle(MainColor, X + 18, mouthY, 24, 12);
+		SplashKit.FillRectangle(MainColor, X + 22, mouthY + 3, 16, 6);
+	}
+}
+
+public class Roundy : Robot
+{
+	public Roundy(Window gameWindow, Player player) : base(gameWindow, player)
+	{
+
+	}
+
+	public override void Draw()
+	{
+		double leftX, midX, rightX;
+		double midY, eyeY, mouthY;
+
+		leftX = X + 17;
+		midX = X + 25;
+		rightX = X + 33;
+
+		midY = Y + 25;
+		eyeY = Y + 20;
+		mouthY = Y + 35;
+
+		SplashKit.FillCircle(Color.White, midX, midY, 25);
+		SplashKit.DrawCircle(Color.Gray, midX, midY, 25);
+		SplashKit.FillCircle(MainColor, leftX, eyeY, 5);
+		SplashKit.FillCircle(MainColor, rightX, eyeY, 5);
+		SplashKit.FillEllipse(Color.Gray, X, eyeY, 50, 30);
+		SplashKit.DrawLine(Color.Black, X, mouthY, X + 50, Y + 35);
+	}
+}
+
+public class Boxy : Robot
+{
+	
+	public Boxy(Window gameWindow, Player player) : base(gameWindow, player)
+	{
+		
+	}
+
+		public override void Draw()
+	{
+		double leftX, rightX;
+		double eyeY, mouthY;
+
+		leftX = X + 12;
+		rightX = X + 27;
+		eyeY = Y + 10;
+		mouthY = Y + 30;
+
+		SplashKit.FillRectangle(Color.Gray, X, Y, 50, 50);
+		SplashKit.FillRectangle(MainColor, leftX, eyeY, 10, 10);
+		SplashKit.FillRectangle(MainColor, rightX, eyeY, 10, 10);
+		SplashKit.FillRectangle(MainColor, leftX, mouthY, 25, 10);
+		SplashKit.FillRectangle(MainColor, leftX + 2, mouthY + 2, 21, 6);
+	}
+}
