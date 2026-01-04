@@ -60,22 +60,22 @@ public class Player
 			SPEED = 10;
 		}
 
-		if (SplashKit.KeyDown(KeyCode.UpKey))
+		if (SplashKit.KeyDown(KeyCode.WKey))
 		{
 			Y -= SPEED;
 		}
 
-		if (SplashKit.KeyDown(KeyCode.DownKey))
+		if (SplashKit.KeyDown(KeyCode.SKey))
 		{
 			Y += SPEED;
 		}
 
-		if (SplashKit.KeyDown(KeyCode.LeftKey))
+		if (SplashKit.KeyDown(KeyCode.AKey))
 		{
 			X -= SPEED;
 		}
 
-		if (SplashKit.KeyDown(KeyCode.RightKey))
+		if (SplashKit.KeyDown(KeyCode.DKey))
 		{
 			X += SPEED;
 		}
